@@ -1,7 +1,9 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { useTheme } from "@/hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router"; // 👈 import router
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface DoctorCardProps {
   name: string;
@@ -18,21 +20,28 @@ export default function DoctorCard({
   image,
   onPress,
 }: DoctorCardProps) {
+  const theme = useTheme();
+  const router = useRouter(); // 👈 get router instance
+
   return (
     <LinearGradient
-      colors={["#ffffff", "#f3f9ff"]}
+      colors={[theme.card, theme.card]}
       style={styles.card}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}>
       {/* Doctor Image */}
-      <View style={styles.imageWrapper}>
+      <View style={[styles.imageWrapper, { backgroundColor: theme.card }]}>
         <Image source={{ uri: image }} style={styles.doctorImage} />
       </View>
 
       {/* Info */}
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.specialty}>{specialty}</Text>
-      <Text style={styles.experience}>{experience} experience</Text>
+      <Text style={[styles.name, { color: theme.text }]}>{name}</Text>
+      <Text style={[styles.specialty, { color: theme.primary }]}>
+        {specialty}
+      </Text>
+      <Text style={[styles.experience, { color: theme.textSecondary }]}>
+        {experience} experience
+      </Text>
 
       {/* Rating */}
       <View style={styles.ratingRow}>
@@ -41,20 +50,27 @@ export default function DoctorCard({
             key={i}
             name="star"
             size={14}
-            color={i < 4 ? "#FFD700" : "#ccc"} // 4/5 stars
+            color={i < 4 ? "#FFD700" : theme.textSecondary}
             style={{ marginHorizontal: 1 }}
           />
         ))}
-        <Text style={styles.ratingText}>4.0</Text>
+        <Text style={[styles.ratingText, { color: theme.textSecondary }]}>
+          4.0
+        </Text>
       </View>
 
       {/* Consult Button */}
-      <TouchableOpacity style={styles.consultButton} onPress={onPress}>
-        <LinearGradient
-          colors={["#0078FF", "#005FCC"]}
-          style={styles.consultGradient}>
-          <Text style={styles.consultText}>Consult</Text>
-        </LinearGradient>
+      <TouchableOpacity
+        style={[styles.consultButton, { backgroundColor: theme.primary }]}
+        onPress={() => {
+          if (onPress) {
+            router.push("/(user)/Appointment");
+            // onPress(); // 👈 if a custom action is passed
+          } else {
+            router.push("/(user)/Appointment"); // 👈 navigate to appointment page
+          }
+        }}>
+        <Text style={styles.consultText}>Consult</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
@@ -76,7 +92,6 @@ const styles = StyleSheet.create({
   imageWrapper: {
     borderRadius: 50,
     padding: 3,
-    backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -91,32 +106,33 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#222",
     textAlign: "center",
   },
   specialty: {
     fontSize: 14,
-    color: "#0078FF",
     marginTop: 2,
     fontWeight: "500",
   },
-  experience: { fontSize: 12, color: "#666", marginTop: 2 },
+  experience: { fontSize: 12, marginTop: 2 },
   ratingRow: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 6,
   },
-  ratingText: { fontSize: 12, color: "#444", marginLeft: 4 },
+  ratingText: { fontSize: 12, marginLeft: 4 },
   consultButton: {
     marginTop: 12,
     width: "80%",
     borderRadius: 25,
     overflow: "hidden",
-  },
-  consultGradient: {
     paddingVertical: 10,
-    borderRadius: 25,
+    // borderRadius: 25,
     alignItems: "center",
   },
+  // consultGradient: {
+  //   paddingVertical: 10,
+  //   borderRadius: 25,
+  //   alignItems: "center",
+  // },
   consultText: { color: "#fff", fontSize: 14, fontWeight: "600" },
 });

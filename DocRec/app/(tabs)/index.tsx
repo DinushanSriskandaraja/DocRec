@@ -1,17 +1,18 @@
+import DoctorCard from "@/components/ui/DoctorCard";
+import { useTheme } from "@/hooks/useTheme";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
   FlatList,
-  TouchableOpacity,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import DoctorCard from "@/components/ui/DoctorCard"; // 👈 import reusable card
-import { router } from "expo-router";
 
 const categories = [
   { id: "1", name: "Dentist", icon: "🦷" },
@@ -30,21 +31,29 @@ const doctors = [
   },
   {
     id: "2",
-    name: "Dr. Mark Lee",
+    name: "Dr. Dinushan Sriskandaraja",
     specialty: "Cardiologist",
-    experience: "12 yrs",
+    experience: "32 yrs",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
 ];
 
 export default function HomeScreen() {
+  const theme = useTheme();
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Greeting Header */}
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.background }]}
+      showsVerticalScrollIndicator={false}>
+      {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Hello 👋</Text>
-          <Text style={styles.title}>Find your specialist</Text>
+          <Text style={[styles.greeting, { color: theme.textSecondary }]}>
+            Hello 👋
+          </Text>
+          <Text style={[styles.title, { color: theme.text }]}>
+            Find your specialist
+          </Text>
         </View>
         <Image
           source={{ uri: "https://randomuser.me/api/portraits/men/85.jpg" }}
@@ -53,42 +62,51 @@ export default function HomeScreen() {
       </View>
 
       {/* Search Bar */}
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, { backgroundColor: theme.card }]}>
         <Ionicons
           name="search"
           size={20}
-          color="#666"
+          color={theme.placeholder}
           style={styles.searchIcon}
         />
         <TextInput
           placeholder="Search doctors, specialties..."
-          style={styles.searchInput}
-          placeholderTextColor="#999"
+          placeholderTextColor={theme.placeholder}
+          style={[styles.searchInput, { color: theme.text }]}
         />
       </View>
 
       {/* Categories */}
-      <Text style={styles.sectionTitle}>Specialties</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>
+        Specialties
+      </Text>
       <FlatList
         data={categories}
         horizontal
         keyExtractor={(item) => item.id}
+        style={{ paddingVertical: 10 }}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.categoryCard}>
+          <TouchableOpacity
+            style={[styles.categoryCard, { backgroundColor: theme.card }]}>
             <Text style={styles.categoryIcon}>{item.icon}</Text>
-            <Text style={styles.categoryText}>{item.name}</Text>
+            <Text style={[styles.categoryText, { color: theme.text }]}>
+              {item.name}
+            </Text>
           </TouchableOpacity>
         )}
         contentContainerStyle={{ paddingHorizontal: 20 }}
         showsHorizontalScrollIndicator={false}
       />
 
-      {/* Top Doctors using reusable DoctorCard */}
-      <Text style={styles.sectionTitle}>Top Doctors</Text>
+      {/* Top Doctors */}
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>
+        Top Doctors
+      </Text>
       <FlatList
         data={doctors}
         horizontal
         keyExtractor={(item) => item.id}
+        style={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
           <DoctorCard
             name={item.name}
@@ -104,16 +122,18 @@ export default function HomeScreen() {
 
       {/* Book Appointment CTA */}
       <TouchableOpacity
-        style={styles.bookButton}
+        style={[styles.bookButton, { backgroundColor: theme.primary }]}
         onPress={() => router.push("/(user)/chatScreen")}>
-        <Text style={styles.bookButtonText}>Check Disease</Text>
+        <Text style={[styles.bookButtonText, { color: "#fff" }]}>
+          Check Disease
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f9f9f9" },
+  container: { flex: 1, marginBottom: 60 },
 
   // Header
   header: {
@@ -123,14 +143,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  greeting: { fontSize: 16, color: "#666" },
-  title: { fontSize: 22, fontWeight: "700", color: "#222", marginTop: 4 },
+  greeting: { fontSize: 16 },
+  title: { fontSize: 22, fontWeight: "700", marginTop: 4 },
   avatar: { width: 45, height: 45, borderRadius: 22 },
 
   // Search
   searchContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
     borderRadius: 12,
     marginHorizontal: 20,
     paddingHorizontal: 12,
@@ -142,7 +161,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   searchIcon: { marginRight: 8 },
-  searchInput: { flex: 1, fontSize: 15, color: "#333" },
+  searchInput: { flex: 1, fontSize: 15 },
 
   // Sections
   sectionTitle: {
@@ -151,12 +170,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 25,
     marginBottom: 12,
-    color: "#222",
   },
 
   // Categories
   categoryCard: {
-    backgroundColor: "#fff",
     padding: 18,
     borderRadius: 14,
     alignItems: "center",
@@ -172,13 +189,11 @@ const styles = StyleSheet.create({
   categoryText: {
     marginTop: 8,
     fontSize: 14,
-    color: "#333",
     fontWeight: "500",
   },
 
   // CTA Button
   bookButton: {
-    backgroundColor: "#0078FF",
     margin: 25,
     padding: 16,
     borderRadius: 14,
@@ -188,5 +203,5 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
-  bookButtonText: { color: "#fff", fontWeight: "bold", fontSize: 17 },
+  bookButtonText: { fontWeight: "bold", fontSize: 17 },
 });

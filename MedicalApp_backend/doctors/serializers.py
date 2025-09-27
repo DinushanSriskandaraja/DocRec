@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import DoctorProfile
+from .models import Doctor
 
-class DoctorProfileSerializer(serializers.ModelSerializer):
+class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DoctorProfile
-        fields = ('id','user','specialization','experience','rating','availability','fee','bio','reviews')
+        model = Doctor
+        fields = "__all__"

@@ -1,15 +1,7 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import Doctor
+from .serializers import DoctorSerializer
 
-# Create your views here.
-from rest_framework import generics
-from .models import DoctorProfile
-from .serializers import DoctorProfileSerializer
-
-class DoctorListView(generics.ListAPIView):
-    queryset = DoctorProfile.objects.all()
-    serializer_class = DoctorProfileSerializer
-
-class DoctorDetailView(generics.RetrieveAPIView):
-    queryset = DoctorProfile.objects.all()
-    serializer_class = DoctorProfileSerializer
-    lookup_field = 'id'
+class DoctorViewSet(viewsets.ModelViewSet):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer

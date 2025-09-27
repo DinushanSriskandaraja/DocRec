@@ -1,9 +1,7 @@
-from django.urls import path
-from .views import book_appointment, list_appointments, cancel_appointment, share_appointment
+from rest_framework.routers import DefaultRouter
+from .views import AvailabilityViewSet, AppointmentViewSet
 
-urlpatterns = [
-    path('appointments', book_appointment),
-    path('appointments/<str:user_id>', list_appointments),
-    path('appointments/<str:id>', cancel_appointment),
-    path('share/<str:appointment_id>', share_appointment),
-]
+router = DefaultRouter()
+router.register(r'availability', AvailabilityViewSet, basename='availability')
+router.register(r'appointments', AppointmentViewSet, basename='appointment')
+urlpatterns = router.urls
